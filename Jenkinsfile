@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.9.18-slim'
-            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+            
         }
     }
     
@@ -53,7 +53,12 @@ pipeline {
         }
         stage('Deploy') {
              
-             
+             agent {
+                docker {
+                    image 'docker:latest'
+                    args '--privileged -v /var/run/docker.sock:/var/run/docker.sock --user root'
+                }
+            }
               steps {
                     echo "this deploy stage"
                     sh 'docker build -t $DOCKER_IMAGE .'
