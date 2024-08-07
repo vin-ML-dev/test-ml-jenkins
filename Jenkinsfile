@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.9.18-slim'
-            reuseNode true
+            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
     
@@ -52,7 +52,7 @@ pipeline {
             }
         }
         stage('Deploy') {
-             agent none
+             
              
               steps {
                     echo "this deploy stage"
