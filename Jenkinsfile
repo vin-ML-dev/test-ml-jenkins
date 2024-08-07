@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.9.18-slim'
-        }
-    }
+    agent any
     
     environment {
          CONTAINER_NAME = "run-iris-model"
@@ -13,6 +9,12 @@ pipeline {
     
     stages {
         stage('Create and Activate Virtual Environment') {
+            agent {
+                docker {
+                    image 'python:3.9.18-slim'
+                    args '--user root' // Use root user to avoid permission issues
+                }
+            }
             steps {
                 script {
                     sh '''
