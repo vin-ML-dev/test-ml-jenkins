@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9.18-slim'
+            reuseNode true
+        }
+    }
     
     environment {
          CONTAINER_NAME = "run-iris-model"
@@ -9,13 +14,6 @@ pipeline {
     
     stages {
         stage('Create and Activate Virtual Environment') {
-            agent {
-                docker {
-                    image 'python:3.9.18-slim'
-                    args '--user root' // Use root user to avoid permission issues
-                    reuseNode true
-                }
-            }
             steps {
                 script {
                     sh '''
@@ -54,6 +52,8 @@ pipeline {
             }
         }
         stage('Deploy') {
+             agent none
+             
               steps {
                     echo "this deploy stage"
                     sh 'docker build -t $DOCKER_IMAGE .'
